@@ -201,8 +201,15 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1 class="title">🧮 Belajar Penjumlahan 🧮</h1>
-            <p class="subtitle">Ayo berlatih penjumlahan dengan menyenangkan!</p>
+            <h1 class="title">🧮 Belajar Matematika 🧮</h1>
+            <p class="subtitle">Ayo berlatih penjumlahan dan pengurangan dengan menyenangkan!</p>
+        </div>
+        
+        <div class="difficulty-selector">
+            <p style="margin-bottom: 10px; color: #4a5568; font-weight: bold;">Pilih Jenis Latihan:</p>
+            <button class="difficulty-btn active" onclick="setOperation('addition')">➕ Penjumlahan</button>
+            <button class="difficulty-btn" onclick="setOperation('subtraction')">➖ Pengurangan</button>
+            <button class="difficulty-btn" onclick="setOperation('mixed')">🔀 Campuran</button>
         </div>
         
         <div class="difficulty-selector">
@@ -245,6 +252,7 @@
         let correctAnswers = 0;
         let totalQuestions = 0;
         let difficulty = 'easy';
+        let operation = 'addition';
         
         const difficultyRanges = {
             easy: { min: 1, max: 10 },
@@ -252,11 +260,26 @@
             hard: { min: 1, max: 100 }
         };
         
+        function setOperation(op) {
+            operation = op;
+            
+            // Update button styles for operation selector
+            const operationButtons = document.querySelectorAll('.difficulty-selector:first-child .difficulty-btn');
+            operationButtons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Generate new question with new operation
+            generateQuestion();
+        }
+        
         function setDifficulty(level) {
             difficulty = level;
             
-            // Update button styles
-            document.querySelectorAll('.difficulty-btn').forEach(btn => {
+            // Update button styles for difficulty selector
+            const difficultyButtons = document.querySelectorAll('.difficulty-selector:last-child .difficulty-btn');
+            difficultyButtons.forEach(btn => {
                 btn.classList.remove('active');
             });
             event.target.classList.add('active');
@@ -267,12 +290,29 @@
         
         function generateQuestion() {
             const range = difficultyRanges[difficulty];
-            const num1 = Math.floor(Math.random() * range.max) + range.min;
-            const num2 = Math.floor(Math.random() * range.max) + range.min;
+            let num1 = Math.floor(Math.random() * range.max) + range.min;
+            let num2 = Math.floor(Math.random() * range.max) + range.min;
+            let operator = '+';
+            let currentOp = operation;
             
-            currentAnswer = num1 + num2;
+            // For mixed mode, randomly choose operation
+            if (operation === 'mixed') {
+                currentOp = Math.random() < 0.5 ? 'addition' : 'subtraction';
+            }
             
-            document.getElementById('question').textContent = `${num1} + ${num2} = ?`;
+            if (currentOp === 'addition') {
+                currentAnswer = num1 + num2;
+                operator = '+';
+            } else if (currentOp === 'subtraction') {
+                // Ensure positive result for subtraction
+                if (num1 < num2) {
+                    [num1, num2] = [num2, num1]; // Swap numbers
+                }
+                currentAnswer = num1 - num2;
+                operator = '−';
+            }
+            
+            document.getElementById('question').textContent = `${num1} ${operator} ${num2} = ?`;
             document.getElementById('answerInput').value = '';
             document.getElementById('feedback').style.display = 'none';
             document.getElementById('answerInput').focus();
@@ -326,5 +366,5 @@
         // Generate first question when page loads
         generateQuestion();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98aa62d075b687dd',t:'MTc1OTgwODUyMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98aa6ddb361981ba',t:'MTc1OTgwODk3Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
